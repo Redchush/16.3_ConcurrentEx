@@ -36,6 +36,7 @@ public class Cat implements Runnable{
     }
     private void askFood() throws InterruptedException {
         human.feedCat(this);
+        logger.debug(this.name + " is fed");
     }
 
      private int generateSleepTime(){

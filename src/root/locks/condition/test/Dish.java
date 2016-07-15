@@ -6,23 +6,30 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class Dish {
 
-
     private volatile boolean isWashed;
+    private int id;
     private Lock lock;
-    private Condition condition;
+    private Condition conditionWashed;
+    private Condition conditionDirty;
 
-    public Dish() {
-        isWashed = false;
+    public Dish(int id) {
+        this.id = id;
+        isWashed = true;
         this.lock = new ReentrantLock();
-        this.condition = lock.newCondition();
+        this.conditionWashed = lock.newCondition();
+        this.conditionDirty= lock.newCondition();
     }
 
     public Lock getLock() {
         return lock;
     }
 
-    public Condition getCondition() {
-        return condition;
+    public Condition getConditionWashed() {
+        return conditionWashed;
+    }
+
+    public Condition getConditionDirty() {
+        return conditionDirty;
     }
 
     public boolean isWashed() {
@@ -31,5 +38,9 @@ public class Dish {
 
     public void setWashed(boolean washed) {
         isWashed = washed;
+    }
+
+    public int getId() {
+        return id;
     }
 }

@@ -50,5 +50,4 @@ public class Man implements Runnable, Layable{
         Random random = new Random();
         return random.nextInt(walkingRate);
     }
-
 }

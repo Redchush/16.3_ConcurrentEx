@@ -1,21 +1,28 @@
 package root.locks.condition.test;
 
 import org.apache.log4j.Logger;
-import root.util.CheckDeadlockDeamon;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 public class Launcher {
 
     private final static Logger logger = Logger.getRootLogger();
 
-    public static void main(String[] args) throws InterruptedException {
-        int dishes = 3;
-        int cats = 7;
+    /*
+    There is several cats and one Human, which has a washmashime.
+    Cats sleep and when ask food, calling the Human
+    Human take the dish, feed cat and then put the dish to washmashine
+    Human can't take a dirty dish,
+     */
 
-        Human human = new Human(new Dish());
+    public static void main(String[] args) throws InterruptedException {
+
+        int dishesCount = 3;
+        int cats = 7;
+        BlockingQueue<Dish> dishes = new ArrayBlockingQueue<Dish>(dishesCount);
+        for (int i = 0; i < dishesCount ; i++) {
+            dishes.put(new Dish(i));
+        }
+        Human human = new Human(dishes);
 
         ExecutorService service = Executors.newCachedThreadPool();
         String baseName = "Cat-";
@@ -23,10 +30,10 @@ public class Launcher {
             Cat cat = new Cat(baseName + i, human);
             service.execute(cat);
         }
+
         long timeToLive = 4000;
-        Thread thread = new CheckDeadlockDeamon("pool", cats, timeToLive); //the demon, who check if the deadlock occurred
         TimeUnit.MILLISECONDS.sleep(timeToLive);
-        service.shutdown();
+        service.shutdownNow();
         logger.debug("All cats are tired");
     }
 }

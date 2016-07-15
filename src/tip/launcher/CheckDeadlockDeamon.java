@@ -1,4 +1,4 @@
-package root.util;
+package tip.launcher;
 
 import org.apache.log4j.Logger;
 
@@ -67,15 +67,15 @@ public class CheckDeadlockDeamon extends Thread {
      * @return is the thread in waiting state
      */
     private boolean checkThread(Thread thread){
-        State state = thread.getState();
-        if (state == State.WAITING){
+        Thread.State state = thread.getState();
+        if (state == Thread.State.WAITING){
             try {
-                Thread.currentThread().sleep(100);
+                Thread.currentThread().sleep(50);
             } catch (InterruptedException e) {
 
             }
             state = thread.getState();
-            if (state == State.WAITING){
+            if (state == Thread.State.WAITING){
                 return true;
             }
         }
